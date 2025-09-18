@@ -1,4 +1,4 @@
-import { LlmAgent } from "@iqai/adk"; // path to the above prompt
+import { LlmAgent } from "@iqai/adk";
 import { HOTEL_AGENT_INSTRUCTION } from "../../assets/prompts";
 import { env } from "../../env";
 import { hotelDetailsTool, hotelPriceTool, searchHotelsTool } from "./tools";
