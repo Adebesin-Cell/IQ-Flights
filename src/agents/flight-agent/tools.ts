@@ -7,16 +7,34 @@ import {
 	priceAnalysisSchema,
 } from "./_schema";
 
+/**
+ * Tool for fetching available flights between two cities.
+ */
 export const getAvailableFlightsTool = createTool({
 	name: "get_available_flights",
-	description: "Get available flights between two cities on a given date",
+	description:
+		"Retrieve available flight offers between two cities for given dates.",
 	schema: z.object({
-		origin: z.string(),
-		destination: z.string(),
-		departureDate: z.string(),
-		returnDate: z.string().optional(),
-		adults: z.number().min(1).default(1),
-		max: z.number().min(1).max(250).default(5),
+		origin: z.string().describe("IATA code of the origin airport, e.g., JFK"),
+		destination: z
+			.string()
+			.describe("IATA code of the destination airport, e.g., LHR"),
+		departureDate: z.string().describe("Departure date in YYYY-MM-DD format"),
+		returnDate: z
+			.string()
+			.optional()
+			.describe("Optional return date in YYYY-MM-DD format for round trips"),
+		adults: z
+			.number()
+			.min(1)
+			.default(1)
+			.describe("Number of adult passengers (must be at least 1)"),
+		max: z
+			.number()
+			.min(1)
+			.max(250)
+			.default(5)
+			.describe("Maximum number of flight offers to return (1–250)"),
 	}),
 	fn: async ({
 		origin,
@@ -46,8 +64,6 @@ export const getAvailableFlightsTool = createTool({
 			if (!offers.length)
 				return `No flights found from ${origin} to ${destination} on ${departureDate}.`;
 
-			console.log(offers);
-
 			return offers
 				.map((offer, idx) => {
 					const segments = offer.itineraries
@@ -69,14 +85,21 @@ export const getAvailableFlightsTool = createTool({
 	},
 });
 
+/**
+ * Tool for analyzing average or typical flight prices.
+ */
 export const flightPriceAnalysisTool = createTool({
 	name: "flight_price_analysis",
 	description:
-		"Get price analysis for flights between two cities on a given date",
+		"Analyze historical and average flight prices for a given route and date.",
 	schema: z.object({
-		origin: z.string(),
-		destination: z.string(),
-		departureDate: z.string(),
+		origin: z.string().describe("IATA code of the origin airport, e.g., SFO"),
+		destination: z
+			.string()
+			.describe("IATA code of the destination airport, e.g., CDG"),
+		departureDate: z
+			.string()
+			.describe("Date of departure in YYYY-MM-DD format"),
 	}),
 	fn: async ({ origin, destination, departureDate }): Promise<string> => {
 		try {
@@ -97,12 +120,25 @@ export const flightPriceAnalysisTool = createTool({
 	},
 });
 
+/**
+ * Tool for searching airports and cities.
+ */
 export const searchAirportsTool = createTool({
 	name: "search_airports",
-	description: "Search for airports by keyword to get IATA codes",
+	description:
+		"Search airports or cities by keyword to retrieve their IATA codes.",
 	schema: z.object({
-		keyword: z.string(),
-		subType: z.enum(["AIRPORT", "CITY"]).default("AIRPORT"),
+		keyword: z
+			.string()
+			.describe(
+				"Partial or full city/airport name to search for, e.g., 'Paris'",
+			),
+		subType: z
+			.enum(["AIRPORT", "CITY"])
+			.default("AIRPORT")
+			.describe(
+				"Specify whether to search for airports or cities (default: AIRPORT)",
+			),
 	}),
 	fn: async ({ keyword, subType }): Promise<string> => {
 		try {

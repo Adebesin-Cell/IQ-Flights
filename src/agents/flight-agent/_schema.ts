@@ -55,32 +55,14 @@ export const priceAnalysisSchema = z.object({
 export const airportSearchSchema = z.object({
 	data: z.array(
 		z.object({
-			type: z.string(),
-			subType: z.string(),
-			name: z.string(),
-			detailedName: z.string(),
-			id: z.string(), // This is the IATA code
-			self: z.object({
-				href: z.string(),
-				methods: z.array(z.string()),
-			}),
-			timeZoneOffset: z.string().optional(),
 			iataCode: z.string(),
-			geoCode: z.object({
-				latitude: z.number(),
-				longitude: z.number(),
-			}),
+			name: z.string(),
+			detailedName: z.string().optional(),
 			address: z.object({
 				cityName: z.string().optional(),
 				cityCode: z.string().optional(),
 				countryName: z.string().optional(),
 				countryCode: z.string().optional(),
-				regionCode: z.string().optional(),
-			}),
-			analytics: z.object({
-				travelers: z.object({
-					score: z.number(),
-				}),
 			}),
 		}),
 	),
