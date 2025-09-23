@@ -12,7 +12,7 @@ dotenv.config();
  * specialized sub-agents.
  */
 async function main() {
-	const questions = ["how is weather in london?", "tell me a random joke"];
+	const questions = ["List flights from London to Paris for the next 7 days", "Book the cheapest flight from London to Paris for the next 7 days"];
 
 	const { runner } = await getRootAgent();
 
