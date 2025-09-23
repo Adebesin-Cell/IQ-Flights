@@ -1,11 +1,8 @@
 import { LlmAgent } from "@iqai/adk";
 import { FLIGHT_AGENT_INSTRUCTION } from "../../assets/prompts";
 import { env } from "../../env";
-import {
-	flightPriceAnalysisTool,
-	getAvailableFlightsTool,
-	searchAirportsTool,
-} from "./tools";
+import { searchAirportsTool } from "../tools";
+import { flightPriceAnalysisTool, getAvailableFlightsTool } from "./tools";
 
 export const getFlightAgent = () => {
 	return new LlmAgent({
