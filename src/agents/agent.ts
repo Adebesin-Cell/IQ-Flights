@@ -2,7 +2,7 @@ import { AgentBuilder } from "@iqai/adk";
 import { ROOT_TRAVEL_AGENT_PROMPT } from "../assets/prompts";
 import { env } from "../env";
 import { getFlightAgent } from "./flight-agent/agent";
-import { searchAirportsTool } from "./flight-agent/tools"; // now shared
+import { searchAirportsTool } from "./flight-agent/tools";
 import { getHotelAgent } from "./hotel-agent/agent";
 
 export const getRootAgent = () => {
