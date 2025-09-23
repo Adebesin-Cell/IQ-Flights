@@ -1,11 +1,7 @@
 import { createTool } from "@iqai/adk";
 import * as z from "zod";
 import { callAmadeusApi } from "../../libs/helpers/amadeus";
-import {
-	airportSearchSchema,
-	flightApiResponseSchema,
-	priceAnalysisSchema,
-} from "./_schema";
+import { flightApiResponseSchema, priceAnalysisSchema } from "./_schema";
 
 /**
  * Tool for fetching available flights between two cities.
@@ -116,50 +112,6 @@ export const flightPriceAnalysisTool = createTool({
 			return `Flight Price Analysis for ${origin} → ${destination} on ${departureDate}:\n- Total Price: ${data.price.total} ${data.price.currency}`;
 		} catch (err) {
 			return `Unable to fetch price analysis: ${err instanceof Error ? err.message : "Unknown error"}. Please try again later.`;
-		}
-	},
-});
-
-/**
- * Tool for searching airports and cities.
- */
-export const searchAirportsTool = createTool({
-	name: "search_airports",
-	description:
-		"Search airports or cities by keyword to retrieve their IATA codes.",
-	schema: z.object({
-		keyword: z
-			.string()
-			.describe(
-				"Partial or full city/airport name to search for, e.g., 'Paris'",
-			),
-		subType: z
-			.enum(["AIRPORT", "CITY"])
-			.default("AIRPORT")
-			.describe(
-				"Specify whether to search for airports or cities (default: AIRPORT)",
-			),
-	}),
-	fn: async ({ keyword, subType }): Promise<string> => {
-		try {
-			const response = await callAmadeusApi(
-				"/v1/reference-data/locations",
-				{ keyword, subType, "page[limit]": 10 },
-				airportSearchSchema,
-			);
-			const airports = response.data;
-
-			if (!airports.length)
-				return `No airports or cities found for "${keyword}".`;
-
-			return airports
-				.map(
-					(a) =>
-						`${a.name} (${a.iataCode}) - ${a.address.cityName || "N/A"}, ${a.address.countryName || "N/A"}`,
-				)
-				.join("\n");
-		} catch (err) {
-			return `Unable to search airports: ${err instanceof Error ? err.message : "Unknown error"}. Please try again later.`;
 		}
 	},
 });
