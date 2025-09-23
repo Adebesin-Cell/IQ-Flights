@@ -1,33 +1,49 @@
 
 <div align="center">
 
-<img src="https://files.catbox.moe/vumztw.png" alt="ADK TypeScript Logo" width="100" />
+<img src="https://files.catbox.moe/vumztw.png" alt="ADK TypeScript Logo" width="120" />
 
 <br/>
 
+# AI Travel Agent
 
+**An intelligent, multi-agent system for planning your travel, built with the `@iqai/adk` library.**
 
-# ADK Simple Agent Starter
-
-**A starter template to build your own agent with the `@iqai/adk` library.**
-
-_Minimal • Extensible • TypeScript_
+_Flights • Hotels • Smart Assistance_
 
 ---
 
 </div>
 
-This is the recommended starter template for building your own agent with the ADK TypeScript framework.
+Welcome! This project is an AI-powered travel assistant designed to make trip planning a breeze. It uses a sophisticated, hierarchical agent system to handle different aspects of your journey. You can ask it to find flights, search for hotels, and it will intelligently figure out the details for you.
+
+## ✨ Features
+
+-   **Hierarchical Agent System**: A main `root_travel_agent` orchestrates tasks, delegating to specialized agents.
+-   **✈️ Flight Agent**: Finds the best flight options for your trip.
+    -   Searches for available flights between cities.
+    -   Analyzes flight prices to find good deals.
+-   **🏨 Hotel Agent**: Helps you find the perfect place to stay.
+    -   Searches for hotels at your destination.
+    -   Provides detailed information about specific hotels.
+-   **📍 Smart Location Handling**: Automatically converts city names (like "Paris") into IATA codes (like "CDG") needed for flight and hotel searches.
 
 ## 🚀 Get Started
 
+Ready to try it out? Here’s how to get the agent running on your local machine.
 
-The easiest way to create a new project using this template is with the ADK CLI:
+### 1. Clone the Repository
 
 ```bash
-npm install -g @iqai/adk-cli # if you haven't already
-adk new --template simple-agent my-agent-project
-cd my-agent-project
+git clone https://github.com/YOUR_USERNAME/iq-flights.git
+cd iq-flights
+```
+
+### 2. Install Dependencies
+
+This project uses `pnpm` for fast and efficient package management. This will install all the necessary packages listed in `package.json`.
+
+```bash
 pnpm install
 ```
 

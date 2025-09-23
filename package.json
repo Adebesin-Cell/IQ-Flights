@@ -1,8 +1,8 @@
 {
-	"name": "adk-simple-agent",
+	"name": "ai-travel-agent",
 	"version": "0.0.1",
-	"description": "adk-simple-agent is a starter project for creating simple adk agent",
-	"main": "dist/index.js",
+	"description": "An intelligent, multi-agent system for planning your travel, built with @iqai/adk.",
+	"main": "dist/src/index.js",
 	"private": true,
 	"scripts": {
 		"build": "tsc",
@@ -11,23 +11,16 @@
 		"clean": "rimraf dist",
 		"prebuild": "pnpm clean"
 	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/IQAICOM/adk-agent-starter.git"
-	},
 	"keywords": [
 		"ai",
 		"agent",
-		"mcp",
 		"adk-ts",
-		"IQAI"
+		"travel",
+		"flights",
+		"hotels"
 	],
 	"author": "IQAI",
 	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/IQAICOM/adk-agent-starter/issues"
-	},
-	"homepage": "https://github.com/IQAICOM/adk-agent-starter#readme",
 	"dependencies": {
 		"@iqai/adk": "^0.3.6",
 		"dotenv": "^17.2.2",
