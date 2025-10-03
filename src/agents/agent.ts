@@ -3,7 +3,7 @@ import { ROOT_TRAVEL_AGENT_PROMPT } from "../assets/prompts";
 import { env } from "../env";
 import { getFlightAgent } from "./flight-agent/agent";
 import { getHotelAgent } from "./hotel-agent/agent";
-import { normalizeDateTool, searchAirportsTool } from "./tools";
+import { searchAirportsTool } from "./tools";
 
 export const getRootAgent = () => {
 	const flightAgent = getFlightAgent();
@@ -15,7 +15,7 @@ export const getRootAgent = () => {
 		)
 		.withInstruction(ROOT_TRAVEL_AGENT_PROMPT)
 		.withModel(env.LLM_MODEL)
-		.withTools(searchAirportsTool, normalizeDateTool)
+		.withTools(searchAirportsTool)
 		.withSubAgents([flightAgent, hotelAgent])
 		.build();
 };

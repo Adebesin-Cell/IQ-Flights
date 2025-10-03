@@ -104,8 +104,6 @@ export async function callAmadeusApi<T>(
 
 		const rawJson = await res.json();
 
-		console.log(JSON.stringify(rawJson, null, 2));
-
 		if (!res.ok) {
 			const errorResult = amadeusErrorSchema.safeParse(rawJson);
 			if (errorResult.success) {

@@ -4,6 +4,7 @@ import { format, isValid, parseISO } from "date-fns";
 import * as z from "zod";
 import { callAmadeusApi } from "../libs/helpers/amadeus";
 import { airportSearchSchema } from "./flight-agent/_schema";
+import { formatDate } from "../libs/helpers/format-date";
 
 /**
  * Tool for searching airports and cities.
@@ -54,51 +55,18 @@ export const searchAirportsTool = createTool({
  * Always returns a string: "ISO: <iso>, Readable: <readable>"
  */
 export const normalizeDateTool = createTool({
-	name: "normalize_date",
-	description:
-		"Parse or format dates. Can extract dates from natural language queries (e.g., 'tomorrow 3pm') or format raw ISO dates (e.g., '2025-10-07T10:35:00'). Always returns a single string with both ISO and readable values.",
-	schema: z.object({
-		query: z
-			.string()
-			.describe("Natural language query OR raw ISO date string."),
-	}),
-	fn: ({ query }) => {
-		try {
-			let date: Date | null = null;
-
-			// Case 1: Already looks like ISO string
-			if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(query)) {
-				date = parseISO(query);
-			} else {
-				// Case 2: Parse natural language query
-				const result = chrono.parse(query)[0];
-				if (!result) {
-					return "DATE_REQUIRED (Readable: Date required)";
-				}
-				date = result.start.date();
-			}
-
-			if (!isValid(date)) {
-				return `INVALID_DATE (Readable: Invalid date for "${query}")`;
-			}
-
-			// ISO (machine use) → datetime if time present, else just date
-			const iso =
-				date.getHours() || date.getMinutes()
-					? format(date, "yyyy-MM-dd'T'HH:mm")
-					: format(date, "yyyy-MM-dd");
-
-			// Readable (user-facing)
-			const readable =
-				date.getHours() || date.getMinutes()
-					? format(date, "PPpp")
-					: format(date, "PPP");
-
-			return `ISO: ${iso}, Readable: ${readable}`;
-		} catch (err) {
-			return `ERROR (Readable: Unable to parse/format date: ${
-				err instanceof Error ? err.message : "Unknown error"
-			})`;
-		}
-	},
+  name: "normalize_date",
+  description:
+    "Parse or format dates. Can extract dates from natural language queries (e.g., 'tomorrow 3pm') or format raw ISO dates (e.g., '2025-10-07T10:35:00'). Always returns a single string with both ISO and readable values.",
+  schema: z.object({
+    query: z.string().describe("Natural language query OR raw ISO date string."),
+  }),
+  fn: ({ query }) => {
+    try {
+      const result = formatDate(query);
+      return `ISO: ${result.iso}, Readable: ${result.readable}`;
+    } catch (err) {
+      return `ERROR (Readable: Unable to parse/format date: ${err instanceof Error ? err.message : "Unknown error"})`;
+    }
+  },
 });
