@@ -22,7 +22,8 @@
 	"author": "IQAI",
 	"license": "MIT",
 	"dependencies": {
-		"@iqai/adk": "^0.3.6",
+		"@iqai/adk": "^0.5.6",
+		"@openrouter/ai-sdk-provider": "^1.2.2",
 		"chrono-node": "^2.9.0",
 		"date-fns": "^4.1.0",
 		"dotenv": "^17.2.2",

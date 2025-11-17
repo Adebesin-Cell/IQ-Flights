@@ -1,14 +1,10 @@
 import { createTool } from "@iqai/adk";
-import * as chrono from "chrono-node";
-import { format, isValid, parseISO } from "date-fns";
 import * as z from "zod";
 import { callAmadeusApi } from "../libs/helpers/amadeus";
 import { airportSearchSchema } from "./flight-agent/_schema";
 import { formatDate } from "../libs/helpers/format-date";
 
-/**
- * Tool for searching airports and cities.
- */
+
 export const searchAirportsTool = createTool({
 	name: "search_airports",
 	description:
@@ -50,10 +46,7 @@ export const searchAirportsTool = createTool({
 	},
 });
 
-/**
- * Tool for extracting, normalizing, and formatting dates.
- * Always returns a string: "ISO: <iso>, Readable: <readable>"
- */
+
 export const normalizeDateTool = createTool({
   name: "normalize_date",
   description:

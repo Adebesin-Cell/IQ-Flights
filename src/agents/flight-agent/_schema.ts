@@ -14,8 +14,8 @@ const itinerarySchema = z.object({
 
 const flightOfferSchema = z.object({
 	type: z.string(),
-	id: z.string(),
-	source: z.string(),
+	id: z.number(),
+	source: z.number(),
 	instantTicketingRequired: z.boolean(),
 	nonHomogeneous: z.boolean(),
 	oneWay: z.boolean(),

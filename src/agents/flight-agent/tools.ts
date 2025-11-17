@@ -1,22 +1,19 @@
 import { createTool } from "@iqai/adk";
 import * as z from "zod";
 import { callAmadeusApi } from "../../libs/helpers/amadeus";
-import { flightApiResponseSchema, priceAnalysisSchema, airportSearchSchema } from "./_schema";
+import { flightApiResponseSchema, priceAnalysisSchema } from "./_schema";
 import { formatDate } from "../../libs/helpers/format-date";
 
-/**
- * Tool for fetching available flights between two cities.
- */
 export const getAvailableFlightsTool = createTool({
   name: "get_available_flights",
   description: "Retrieve available flight offers between two cities for given dates.",
   schema: z.object({
-    origin: z.string().describe("IATA code of the origin airport, e.g., JFK"),
-    destination: z.string().describe("IATA code of the destination airport, e.g., LHR"),
-    departureDate: z.string().describe("Departure date in YYYY-MM-DD format"),
-    returnDate: z.string().optional().describe("Optional return date in YYYY-MM-DD format for round trips"),
-    adults: z.number().min(1).default(1).describe("Number of adult passengers (must be at least 1)"),
-    max: z.number().min(1).max(250).default(5).describe("Maximum number of flight offers to return (1–250)"),
+    origin: z.string(),
+    destination: z.string(),
+    departureDate: z.string(),
+    returnDate: z.string().optional(),
+    adults: z.number().min(1).default(1),
+    max: z.number().min(1).max(250).default(5),
   }),
   fn: async ({ origin, destination, departureDate, returnDate, adults, max }): Promise<string> => {
     try {
@@ -29,7 +26,11 @@ export const getAvailableFlightsTool = createTool({
       };
       if (returnDate) params.returnDate = returnDate;
 
+      console.log("params", params)
+
       const response = await callAmadeusApi("/v2/shopping/flight-offers", params, flightApiResponseSchema);
+
+      console.log("response", JSON.stringify(response, null, 2))
       const offers = response.data;
 
       if (!offers.length)
@@ -57,16 +58,13 @@ export const getAvailableFlightsTool = createTool({
   },
 });
 
-/**
- * Tool for analyzing average or typical flight prices.
- */
 export const flightPriceAnalysisTool = createTool({
   name: "flight_price_analysis",
   description: "Analyze historical and average flight prices for a given route and date.",
   schema: z.object({
-    origin: z.string().describe("IATA code of the origin airport, e.g., SFO"),
-    destination: z.string().describe("IATA code of the destination airport, e.g., CDG"),
-    departureDate: z.string().describe("Date of departure in YYYY-MM-DD format"),
+    origin: z.string(),
+    destination: z.string(),
+    departureDate: z.string(),
   }),
   fn: async ({ origin, destination, departureDate }): Promise<string> => {
     try {

@@ -1,39 +1,46 @@
-import * as z from "zod";
+import { z } from "zod";
 import { callAmadeusApi } from "./amadeus";
 
-export const POPULAR_CITY_CODES = [
-	{ code: "NYC", name: "New York" },
-	{ code: "LON", name: "London" },
-	{ code: "PAR", name: "Paris" },
-	{ code: "BER", name: "Berlin" },
-	{ code: "MAD", name: "Madrid" },
-	{ code: "SIN", name: "Singapore" },
-	{ code: "BKK", name: "Bangkok" },
-];
-
-const citySchema = z.object({
-	name: z.string(),
-	iataCode: z.string(),
-	countryCode: z.string(),
+const amadeusLocationSchema = z.object({
+  name: z.string(),
+  detailedName: z.string(),
+  iataCode: z.string(),
+  subType: z.string(),
 });
 
-const citiesSchema = z.array(citySchema);
+const amadeusDataSchema = z.object({
+  data: z.array(amadeusLocationSchema),
+});
 
-/**
- * Fetch city codes from Amadeus (dynamic search)
- */
+export const citySchema = z.object({
+  name: z.string(),
+  iataCode: z.string(),
+  countryCode: z.string(),
+});
+export const citiesSchema = z.array(citySchema);
+
 export async function getCityCodes(keyword: string, limit = 50) {
-	if (!keyword) return []; // fallback if no keyword
+  if (!keyword) return [];
 
-	const cities = await callAmadeusApi(
-		"/v1/reference-data/locations",
-		{
-			keyword,
-			subType: "CITY",
-			"page[limit]": limit,
-		},
-		citiesSchema,
-	);
+  const response = await callAmadeusApi(
+    "/v1/reference-data/locations",
+    {
+      keyword,
+      subType: "CITY",
+      "page[limit]": limit,
+    },
+    amadeusDataSchema
+  );
 
-	return cities;
+  const cities = response.data.map((loc) => {
+    const parts = loc.detailedName.split("/");
+    const countryCode = parts.length > 1 ? parts[parts.length - 1] : "";
+    return {
+      name: loc.name,
+      iataCode: loc.iataCode,
+      countryCode,
+    };
+  });
+
+  return citiesSchema.parse(cities);
 }
